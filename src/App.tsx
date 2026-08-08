@@ -12,6 +12,9 @@ import { StoreCreditPolicyModal } from './components/StoreCreditPolicyModal';
 import { EmailFormPreviewModal } from './components/EmailFormPreviewModal';
 import { CustomerPortalView } from './components/CustomerPortalView';
 import { LiveSocketAdminModal } from './components/LiveSocketAdminModal';
+import { AutomatedAlertsModal } from './components/AutomatedAlertsModal';
+import { StoreCreditAnalyticsModal } from './components/StoreCreditAnalyticsModal';
+import { CustomReceiptRefundModal } from './components/CustomReceiptRefundModal';
 import { 
   Users, 
   Search, 
@@ -47,7 +50,10 @@ import {
   ExternalLink,
   Calendar,
   ShieldCheck,
-  Menu
+  Menu,
+  Bell,
+  BarChart3,
+  Receipt
 } from 'lucide-react';
 
 const safeStorage = {
@@ -184,6 +190,9 @@ export default function App() {
   const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
   const [isEmailFormModalOpen, setIsEmailFormModalOpen] = useState(false);
   const [isLiveSocketModalOpen, setIsLiveSocketModalOpen] = useState(false);
+  const [isAutomatedAlertsModalOpen, setIsAutomatedAlertsModalOpen] = useState(false);
+  const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
+  const [isCustomReceiptModalOpen, setIsCustomReceiptModalOpen] = useState(false);
 
   const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
 
@@ -860,16 +869,16 @@ export default function App() {
                   
                   <button
                     onClick={() => {
-                      setIsLiveSocketModalOpen(true);
+                      setIsCustomReceiptModalOpen(true);
                       setIsMenuOpen(false);
                     }}
-                    className="w-full text-left px-3.5 py-3 bg-emerald-950/20 hover:bg-emerald-900/30 border border-emerald-900/50 hover:border-emerald-700/80 text-emerald-400 rounded-xl transition-all flex items-center justify-between gap-2 cursor-pointer group"
+                    className="w-full text-left px-3.5 py-3 bg-emerald-950/30 hover:bg-emerald-900/40 border border-emerald-600/50 hover:border-emerald-500 text-emerald-300 rounded-xl transition-all flex items-center justify-between gap-2.5 cursor-pointer group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
-                      <span className="text-xs font-bold text-slate-200">Live CC Monitor</span>
+                      <Receipt className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-bold text-slate-100">Custom Receipt Refund (Alberta)</span>
                     </div>
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="px-1.5 py-0.5 rounded bg-emerald-600 text-[10px] text-white font-black">5% GST</span>
                   </button>
 
                   <button
@@ -900,6 +909,34 @@ export default function App() {
                     </div>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
                   </a>
+
+                  <button
+                    onClick={() => {
+                      setIsAutomatedAlertsModalOpen(true);
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full text-left px-3.5 py-3 bg-slate-950/40 hover:bg-slate-800/50 border border-slate-800/80 hover:border-slate-700 text-slate-300 rounded-xl transition-all flex items-center justify-between gap-2.5 cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Bell className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold text-slate-300">Automated Alerts & Telegram</span>
+                    </div>
+                    <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-[10px] text-emerald-400 font-bold border border-emerald-800">New</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsAnalyticsModalOpen(true);
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full text-left px-3.5 py-3 bg-slate-950/40 hover:bg-slate-800/50 border border-slate-800/80 hover:border-slate-700 text-slate-300 rounded-xl transition-all flex items-center justify-between gap-2.5 cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <BarChart3 className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-semibold text-slate-300">Store Credit & Liability Analytics</span>
+                    </div>
+                    <span className="px-1.5 py-0.5 rounded bg-blue-950 text-[10px] text-blue-400 font-bold border border-blue-800">Q1</span>
+                  </button>
 
                   <button
                     onClick={() => {
@@ -1793,6 +1830,26 @@ export default function App() {
       <LiveSocketAdminModal
         isOpen={isLiveSocketModalOpen}
         onClose={() => setIsLiveSocketModalOpen(false)}
+      />
+
+      {/* Automated Alerts & Telegram Integration Modal */}
+      <AutomatedAlertsModal
+        isOpen={isAutomatedAlertsModalOpen}
+        onClose={() => setIsAutomatedAlertsModalOpen(false)}
+      />
+
+      {/* Store Credit & Liability Analytics Modal */}
+      <StoreCreditAnalyticsModal
+        isOpen={isAnalyticsModalOpen}
+        onClose={() => setIsAnalyticsModalOpen(false)}
+        customers={customers}
+      />
+
+      {/* Custom Receipt Refund & TryCloudflare Modal */}
+      <CustomReceiptRefundModal
+        isOpen={isCustomReceiptModalOpen}
+        onClose={() => setIsCustomReceiptModalOpen(false)}
+        customers={customers}
       />
 
       {/* Floating Batch Action Bar */}
