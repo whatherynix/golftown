@@ -3429,6 +3429,20 @@ app.post('/api/telegram-config/test', async (req, res) => {
   }
 });
 
+// GET Manual Start/Stop Polling via URL
+app.get('/api/telegram-config/start-polling', async (req, res) => {
+  if (!customTelegramConfig.telegramToken) {
+    return res.status(400).json({ success: false, error: 'Cannot start polling without a valid bot token.' });
+  }
+  await startTelegramPolling();
+  res.json({ success: true, isPollingActive: isPollingLoopRunning });
+});
+
+app.get('/api/telegram-config/stop-polling', async (req, res) => {
+  await stopTelegramPolling();
+  res.json({ success: true, isPollingActive: isPollingLoopRunning });
+});
+
 // POST Manual Start/Stop Polling
 app.post('/api/telegram-config/start-polling', async (req, res) => {
   if (!customTelegramConfig.telegramToken) {

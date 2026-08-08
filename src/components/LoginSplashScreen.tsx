@@ -30,11 +30,7 @@ export function LoginSplashScreen({ onAuthenticate }: LoginSplashScreenProps) {
     }, 400);
   };
 
-  const handleQuickFill = () => {
-    setUsername('GOLFTOWN');
-    setPassword('Covid-19');
-    setError('');
-  };
+
 
   return (
     <div className="fixed inset-0 z-[9999] bg-slate-950 flex items-center justify-center p-4 overflow-y-auto">
@@ -82,7 +78,7 @@ export function LoginSplashScreen({ onAuthenticate }: LoginSplashScreenProps) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="GOLFTOWN"
+                placeholder=""
                 required
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm font-semibold text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
               />
@@ -99,7 +95,7 @@ export function LoginSplashScreen({ onAuthenticate }: LoginSplashScreenProps) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder=""
                 required
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm font-semibold text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
               />
@@ -124,17 +120,7 @@ export function LoginSplashScreen({ onAuthenticate }: LoginSplashScreenProps) {
           </button>
         </form>
 
-        {/* Demo Quick Fill Helper */}
-        <div className="mt-6 pt-5 border-t border-slate-800/80 text-center">
-          <button
-            type="button"
-            onClick={handleQuickFill}
-            className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold bg-emerald-950/50 border border-emerald-800/50 px-3 py-1.5 rounded-lg hover:bg-emerald-900/60 transition-colors"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Auto-Fill Demo Credentials (GOLFTOWN / Covid-19)</span>
-          </button>
-        </div>
+
 
         <div className="mt-6 text-center text-[10px] text-slate-500">
           Golf Town Store Credit Reconciliation & Alignment Engine • Confidential

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# Golf Town Store Credit Portal - Debian Live TryCloudflare Tunnel Runner
+# Golf Town Store Credit Portal - Termux Live TryCloudflare Tunnel Runner
 # ==============================================================================
 
 GREEN='\033[0;32m'
@@ -21,8 +21,10 @@ CF_BIN="cloudflared"
 if ! command -v cloudflared &> /dev/null; then
     if [ -f "./cloudflared" ]; then
         CF_BIN="./cloudflared"
+    elif [ -f "$PREFIX/bin/cloudflared" ]; then
+        CF_BIN="$PREFIX/bin/cloudflared"
     else
-        echo -e "${RED}[!] cloudflared binary not found. Please run ./debian-install.sh first.${NC}"
+        echo -e "${RED}[!] cloudflared binary not found. Please run ./termux-install.sh first.${NC}"
         exit 1
     fi
 fi
@@ -42,7 +44,7 @@ cleanup() {
 trap cleanup SIGINT SIGTERM EXIT
 
 echo -e "${PURPLE}==============================================================================${NC}"
-echo -e "${CYAN}    Golf Town Store Credit Portal — Launching on Debian/Ubuntu${NC}"
+echo -e "${CYAN}    Golf Town Store Credit Portal — Launching on Termux/Android${NC}"
 echo -e "${PURPLE}==============================================================================${NC}"
 
 # Check if build exists
@@ -58,7 +60,7 @@ if [ -z "$NODE_BIN" ]; then
     exit 1
 fi
 
-echo -e "${BLUE}[1/2] Starting Node.js backend server on http://0.0.0.0:3000...${NC}"
+echo -e "${BLUE}[1/2] Starting Node.js backend server on http://127.0.0.1:3000...${NC}"
 $NODE_BIN dist/server.cjs > server.log 2>&1 &
 SERVER_PID=$!
 
@@ -73,7 +75,7 @@ fi
 
 echo -e "${BLUE}[2/2] Launching TryCloudflare Quick Tunnel for secure HTTPS access...${NC}"
 rm -f cloudflared.log
-$CF_BIN tunnel --url http://localhost:3000 > cloudflared.log 2>&1 &
+$CF_BIN tunnel --url http://127.0.0.1:3000 > cloudflared.log 2>&1 &
 TUNNEL_PID=$!
 
 echo -e "${YELLOW}[*] Negotiating secure tunnel connection with Cloudflare edge network...${NC}"
@@ -99,12 +101,11 @@ if [ -n "$CF_URL" ]; then
     echo -e " 📱  Deposit Portal:  ${GREEN}${BOLD}${CF_URL}/?session_id=LIVE-DEMO${NC}"
     export APP_URL="$CF_URL"
 else
-    echo -e " 🔒  TryCloudflare:   ${RED}[!] Tunnel establishment timed out. Check cloudflared.log${NC}"
+    echo -e "${RED}[!] Failed to establish Cloudflare Tunnel. Check cloudflared.log for details.${NC}"
+    echo -e "    You can still access the portal locally at http://localhost:3000"
 fi
 echo -e "${PURPLE}==============================================================================${NC}"
-echo -e " Press ${BOLD}CTRL+C${NC} to stop the server and close the secure tunnel."
-echo -e "${PURPLE}==============================================================================${NC}"
-echo ""
+echo -e "${YELLOW}[*] Press CTRL+C to safely shut down the portal and tunnel.${NC}"
 
-# Tail server log to keep process alive in foreground
+# Keep script running
 wait $SERVER_PID
