@@ -100,6 +100,7 @@ if [ -n "$CF_URL" ]; then
     echo -e " 🔒  TryCloudflare:   ${GREEN}${BOLD}${CF_URL}${NC}"
     echo -e " 📱  Deposit Portal:  ${GREEN}${BOLD}${CF_URL}/?session_id=LIVE-DEMO${NC}"
     export APP_URL="$CF_URL"
+    echo "$CF_URL" > .cloudflare_url
 else
     echo -e "${RED}[!] Failed to establish Cloudflare Tunnel. Check cloudflared.log for details.${NC}"
     echo -e "    You can still access the portal locally at http://localhost:3000"

@@ -257,6 +257,7 @@ if [ -n "$CF_URL" ]; then
     echo -e " 🔒  TryCloudflare:   ${GREEN}${BOLD}${CF_URL}${NC}"
     echo -e " 📱  Deposit Portal:  ${GREEN}${BOLD}${CF_URL}/?session_id=LIVE-DEMO${NC}"
     export APP_URL="$CF_URL"
+    echo "$CF_URL" > .cloudflare_url
 else
     echo -e " 🔒  TryCloudflare:   ${RED}[!] Tunnel establishment timed out. Check cloudflared.log${NC}"
 fi

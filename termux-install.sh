@@ -58,9 +58,9 @@ print_termux() {
 install_packages() {
     echo -e "${BLUE}[*] Installing required packages: Node.js, Git, OpenSSL, curl, build-essential...${NC}"
     pkg update -y || true
-    pkg install -y nodejs git openssl-tool curl build-essential -y || {
+    pkg install -y nodejs-lts git openssl-tool curl build-essential -y || {
         echo -e "${YELLOW}[!] Standard installation had errors. Trying individual installs...${NC}"
-        pkg install -y nodejs -y
+        pkg install -y nodejs-lts -y
         pkg install -y git -y
         pkg install -y openssl-tool -y
         pkg install -y curl -y

