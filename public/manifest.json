@@ -1,0 +1,16 @@
+{
+  "name": "Golf Town Store Credit Portal",
+  "short_name": "Golf Town Credit",
+  "description": "Golf Town Q1 Store Credit Manager & Refund Portal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b131e",
+  "theme_color": "#004d25",
+  "icons": [
+    {
+      "src": "https://ams-cdn.cashstar.com/permanent/brands/GOLFTOWN/meta/icons/favicon.ico?version=1014",
+      "sizes": "192x192 512x512",
+      "type": "image/x-icon"
+    }
+  ]
+}

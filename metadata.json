@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Customer Gender Split \u0026 Store Credit Manager Q1 2024",
+  "description": "System to categorize customers by gender, manage store credit aging, and analyze store credit data for Q1 2024.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
