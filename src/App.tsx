@@ -311,16 +311,30 @@ export default function App() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiMessage, setAiMessage] = useState('');
 
-  // Local persistence helpers
+  // Local persistence helpers & debounced auto-save ref
+  const saveTimeoutRef = useRef<number | null>(null);
+
   const handleSaveCustomers = (newCustomers: CustomerRecord[]) => {
     setCustomers(newCustomers);
     safeStorage.setItem('multi_store_customers', JSON.stringify(newCustomers));
-    // Sync with backend database
-    fetch('/api/customers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customers: newCustomers })
-    }).catch(err => console.error('Failed to sync customers:', err));
+    
+    // Clear any existing pending debounce timer
+    if (saveTimeoutRef.current !== null) {
+      window.clearTimeout(saveTimeoutRef.current);
+    }
+
+    // Debounce backend synchronization by 2 seconds of inactivity
+    saveTimeoutRef.current = window.setTimeout(() => {
+      fetch('/api/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customers: newCustomers })
+      }).then(res => res.json())
+        .then(data => {
+          console.log('[Auto-Save] Backend synchronized successfully:', data);
+        })
+        .catch(err => console.error('Failed to debounced sync customers:', err));
+    }, 2000);
   };
 
   // Sync customers to backend on load

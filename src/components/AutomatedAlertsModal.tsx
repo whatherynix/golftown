@@ -88,6 +88,16 @@ export function AutomatedAlertsModal({ isOpen, onClose }: AutomatedAlertsModalPr
         channel: 'Telegram Bot',
         frequency: 'realtime',
         targetGroup: '@GolfTownSecurity'
+      },
+      {
+        id: 'customer-comments-auto-push',
+        title: 'Auto-Push New Customer Comments & Notes',
+        description: 'Automatically push any new customer comment or note update directly to the connected Telegram group in real-time.',
+        enabled: true,
+        time: 'Instant',
+        channel: 'Telegram Bot',
+        frequency: 'realtime',
+        targetGroup: '@GolfTownCustomerNotes'
       }
     ];
   });
