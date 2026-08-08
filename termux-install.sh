@@ -43,7 +43,7 @@ print_eni_note() {
 }
 
 # Ensure we are running on an Android/Termux device (or gracefully proceed with warning)
-check_termux() {
+print_termux() {
     echo -e "${BLUE}[*] Validating environment compatibility...${NC}"
     if [ -d "/data/data/com.termux" ]; then
         echo -e "${GREEN}[✔] Termux environment detected! (Path: /data/data/com.termux)${NC}"
