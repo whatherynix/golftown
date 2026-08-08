@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { CustomerRecord, FilterGender, StoreLocation } from './types';
 import { INITIAL_CUSTOMERS, guessGender } from './data/initialData';
 import { sanitizeCustomerRecords } from './data/dataSanitizer';
